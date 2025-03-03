@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Bỏ Phiếu</title>
+   <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <h1 class="main-title">ADMIN</h1>
+
+    <div class="auth-container">
+        <div class="tabs">
+            <button id="login-tab" class="tab active" onclick="switchForm('login')">ĐĂNG NHẬP</button>
+        </div>
+       <div id="login-form">
+            <form method="POST">
+                <label for="login-phone">Gmail</label>
+                <input type="text" id="login-phone" name="phone" required>
+
+                <label for="login-password">Mật khẩu</label>
+                <div class="password-wrapper">
+                    <input type="password" id="login-password" name="password" required>
+                    <i class="fa fa-eye password-icon" onclick="togglePassword('login-password')"></i>
+                </div>
+
+                <button type="submit" class="auth-button">ĐĂNG NHẬP</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='script/index.js') }}"></script>
+</html>
