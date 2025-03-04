@@ -22,7 +22,7 @@ function loadUsers() {
                     <td>${user.fullname}</td>
                     <td>${user.date_of_birth|| 'Chưa cập nhật'}</td>
                     <td>${user.hometown || 'Chưa cập nhật'}</td>
-                    <td>${user.phone_number || 'Chưa cập nhật'}</td>
+                    <td>${user.phone || 'Chưa cập nhật'}</td>
                     <td>${user.id_document_path || 'Chưa cập nhật'}</td>
                     <td>${user.blockchain_hash || 'Chưa cập nhật'}</td>
                     <td>${user.vote || 'Chưa cập nhật'}</td>
