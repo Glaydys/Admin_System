@@ -28,7 +28,7 @@ def get_users():
             "fullname": user.get("fullname", "Không có tên"),
             "date_of_birth": user.get("date_of_birth", "Chưa cập nhật"),
             "hometown": user.get("hometown", "Chưa cập nhật"),
-            "phone_number": user.get("phone_number", "Chưa cập nhật"),
+            "phone": user.get("phone", "Chưa cập nhật"),
              "id_document_path" : user.get("id_document_path","Chưa cập nhật"),
             "blockchain_hash": user.get("blockchain_hash", "Chưa cập nhật")
         } for user in users]
