@@ -9,7 +9,7 @@
 body {
     display: flex;
     height: 100vh;
-    background:  #fbe9e7;
+    background: #fbe9e7;
 }
 
 .sidebar {
@@ -51,11 +51,11 @@ body {
     padding: 20px;
 }
 
-.dashboard, .users, .elections, .candidate-registration  {
+.dashboard, .users, .elections, .formThemCuocBauCu {
     display: none;
 }
 
-.dashboard.active, .users.active, .elections.active, .candidate-registration.active   {
+.dashboard.active, .users.active, .elections.active, .formThemCuocBauCu.active {
     display: block;
 }
 
@@ -68,7 +68,7 @@ body {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex: 1;
     text-align: center;
 }
@@ -83,8 +83,9 @@ body {
     padding: 15px;
     background: #ffeb3b;
     color: #d32f2f;
-    border: none; cursor:
-    pointer; width: 100%;
+    border: none;
+    cursor: pointer;
+    width: 100%;
     border-radius: 5px;
 }
 
@@ -96,25 +97,26 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-  }
+}
 
-  th, td {
+th, td {
     padding: 12px;
     text-align: left;
     border: 1px solid #ddd;
-  }
+}
 
-  th {
+th {
     background-color: #f2f2f2;
-  }
+}
 
-  tr:hover {
+tr:hover {
     background-color: #f1f1f1;
-  }
+}
 
-  img {
+img {
     border-radius: 5px;
-  }
+}
+
 .user-detail-card {
     background: white;
     padding: 20px;
@@ -140,71 +142,121 @@ table {
 
 
 /*ui form add candidate*/
-.candidate-registration {
-    width: 60%;
+.formThemCuocBauCu {
+    width: 50%;
     margin: 30px auto;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
 }
 
-.candidate-registration h2 {
+.formThemCuocBauCu h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
-}
-
-h3 {
-    margin-top: 15px;
-    color: #444;
+    margin-bottom: 15px;
+    font-size: 20px;
 }
 
 form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.form-group {
     display: flex;
     flex-direction: column;
+    gap: 10px; /* Giảm khoảng cách giữa các phần tử */
 }
 
 label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
+    font-weight: 600;
+    color: #444;
 }
 
 input, select {
-    padding: 10px;
+    width: 100%;
+    padding: 8px; /* Giảm padding để input nhỏ gọn hơn */
     border: 1px solid #ccc;
     border-radius: 5px;
-    outline: none;
-    transition: 0.3s;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input:focus, select:focus {
     border-color: #d32f2f;
+    box-shadow: 0 0 4px rgba(211, 47, 47, 0.3);
+    outline: none;
 }
 
-.submit-btn {
-    grid-column: span 2;
-    padding: 12px;
-    background: #d32f2f;
-    color: white;
-    font-size: 16px;
+#ungCuVienContainer {
+    margin-top: 5px; /* Giảm khoảng cách của container ứng cử viên */
+}
+
+button {
+    padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    font-size: 15px;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.submit-btn:hover {
+button[type="submit"] {
+    background: #d32f2f;
+    color: white;
+    font-weight: bold;
+}
+
+button[type="submit"]:hover {
     background: #b71c1c;
+    transform: scale(1.02);
 }
 
-.candidate-edit {
-    display: none;
+#btnHuy {
+    background: #aaa;
+    color: white;
+    font-weight: bold;
 }
+
+#btnHuy:hover {
+    background: #888;
+    transform: scale(1.02);
+}
+
+button[type="submit"], #btnHuy {
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .formThemCuocBauCu {
+        width: 80%;
+    }
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    margin: 5% auto;
+    width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+

@@ -30,7 +30,7 @@ function loadUsers() {
                         </button>
                     </td>
                     <td>${user.fullname}</td>
-                    <td>${user.date_of_birth|| 'Chưa cập nhật'}</td>
+                    <td>${user.date_of_birth || 'Chưa cập nhật'}</td>
                     <td>${user.hometown || 'Chưa cập nhật'}</td>
                     <td>${user.phone || 'Chưa cập nhật'}</td>
                     <td>${user.id_document_path || 'Chưa cập nhật'}</td>
@@ -40,205 +40,209 @@ function loadUsers() {
         })
         .catch(error => console.error('Lỗi khi tải danh sách người dùng:', error));
 }
+
 //Phê duyệt user
 function toggleApproveUser(userId) {
     fetch(`/admin/approve_user/${userId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json' 
-            
+        method: 'POST', headers: {
+            'Content-Type': 'application/json'
+
         },
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            console.log('Phê duyệt người dùng thành công:', userId);
-            
-            const button = document.querySelector(`.approve-button[data-user-id="${userId}"]`);
-            if (button) {
-                button.classList.remove('pending');
-                button.classList.add('approved');
-                button.textContent = 'Đã duyệt';
-                
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        } else {
-            console.error('Lỗi phê duyệt người dùng:', data.message);
-            alert('Lỗi phê duyệt người dùng: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi gửi yêu cầu phê duyệt:', error);
-        
-    });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('Phê duyệt người dùng thành công:', userId);
+
+                const button = document.querySelector(`.approve-button[data-user-id="${userId}"]`);
+                if (button) {
+                    button.classList.remove('pending');
+                    button.classList.add('approved');
+                    button.textContent = 'Đã duyệt';
+
+                }
+            } else {
+                console.error('Lỗi phê duyệt người dùng:', data.message);
+                alert('Lỗi phê duyệt người dùng: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi gửi yêu cầu phê duyệt:', error);
+
+        });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const btnAddCandidate = document.getElementById("btnAddCandidate");
-    const candidateForm = document.querySelector(".candidate-registration");
-    const form = document.querySelector(".candidate-registration form");
-    fetchCandidates();
+    const btnThemCuocBauCu = document.getElementById("btnThemCuocBauCu");
+    const formThemCuocBauCu = document.querySelector(".formThemCuocBauCu");
+    const form = document.querySelector(".formThemCuocBauCu form");
+    fetchElections()
 
-    if (btnAddCandidate && candidateForm) {
-        btnAddCandidate.addEventListener("click", function () {
+    if (btnThemCuocBauCu && formThemCuocBauCu) {
+        btnThemCuocBauCu.addEventListener("click", function () {
             // Ẩn tất cả các section khác nếu cần
             document.querySelectorAll(".main > div").forEach(div => div.classList.remove("active"));
 
             // Hiển thị form đăng ký
-            candidateForm.classList.add("active");
+            formThemCuocBauCu.classList.add("active");
         });
     }
 
-    //Gui yeu cau xu ly dang ki candidate
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        const jsonData = {};
-        formData.forEach((value, key) => {
-            jsonData[key] = value;
+    if (btnHuy) {
+        btnHuy.addEventListener("click", function () {
+            formThemCuocBauCu.classList.remove("active");
         });
+    }
 
-        fetch("/register_candidate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(jsonData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message || "Có lỗi xảy ra!");
-            if (data.message) {
-                form.reset(); // Reset form sau khi gửi thành công
-            }
-        })
-        .catch(error => console.error("Lỗi:", error));
-    });
+    // Ẩn form lúc đầu bằng cách đảm bảo không có class active
+    formThemCuocBauCu.classList.remove("active");
 });
 
-function fetchCandidates() {
-    fetch("/candidates")
+function hienFormUngCuVien() {
+    document.getElementById("formUngCuVien").style.display = "block";
+}
+
+function anFormUngCuVien() {
+    document.getElementById("formUngCuVien").style.display = "none";
+}
+
+function themUngCuVien() {
+    let full_name = document.getElementById("full_name").value.trim();
+    let dob = document.getElementById("dob").value.trim();
+    let gender = document.getElementById("gender").value;
+    let nationality = document.getElementById("nationality").value.trim();
+    let ethnicity = document.getElementById("ethnicity").value.trim();
+    let religion = document.getElementById("religion").value.trim();
+    let hometown = document.getElementById("hometown").value.trim();
+    let current_residence = document.getElementById("current_residence").value.trim();
+    let occupation = document.getElementById("occupation").value.trim();
+    let workplace = document.getElementById("workplace").value.trim();
+
+    if (!full_name || !dob || !gender || !nationality || !ethnicity || !religion || !hometown || !current_residence || !occupation || !workplace) {
+        alert("Vui lòng nhập đầy đủ thông tin ứng cử viên!");
+        return;
+    }
+
+    let danhSach = document.getElementById("danhSachUngCuVien");
+
+    let li = document.createElement("li");
+    let ungCuVienInfo = [full_name, dob, gender, nationality, ethnicity, religion, hometown, current_residence, occupation, workplace];
+
+    li.dataset.info = JSON.stringify(ungCuVienInfo); // Lưu thông tin dưới dạng JSON
+
+    li.innerHTML = `<b>${full_name}</b>, ${dob}, ${gender}, ${nationality}, ${ethnicity}, ${religion}, ${hometown}, ${current_residence}, ${occupation}, ${workplace} 
+                    <button onclick="xoaUngCuVien(this)">🗑 Xóa</button>`;
+
+    danhSach.appendChild(li);
+
+    // Ẩn form và reset dữ liệu nhập (chỉ reset text input)
+    anFormUngCuVien();
+    document.querySelectorAll("#formUngCuVien input[type='text'], #formUngCuVien input[type='date']").forEach(input => input.value = "");
+}
+
+
+function xoaUngCuVien(button) {
+    let li = button.parentElement;
+    li.remove(); // Xóa ứng cử viên khỏi danh sách
+}
+
+document.getElementById("electionForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    let tenCuocBauCu = document.getElementById("tenCuocBauCu").value;
+    let khuVuc = document.getElementById("khuVuc").value;
+    let thoiGianBatDau = document.getElementById("thoiGianBatDau").value;
+    let thoiGianKetThuc = document.getElementById("thoiGianKetThuc").value;
+
+    let ungCuVien = [];
+    document.querySelectorAll("#danhSachUngCuVien li").forEach((li) => {
+        ungCuVien.push(JSON.parse(li.dataset.info));
+    });
+
+    let data = {
+        tenCuocBauCu, khuVuc, ungCuVien, thoiGianBatDau, thoiGianKetThuc
+    };
+
+    try {
+        let response = await fetch("/add_election", {
+            method: "POST", headers: {
+                "Content-Type": "application/json"
+            }, body: JSON.stringify(data)
+        });
+
+        let result = await response.json();
+        alert(result.message);
+    } catch (error) {
+        console.error("Lỗi:", error);
+    }
+});
+
+function fetchElections() {
+    fetch("/get_elections")
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector(".elections tbody");
             tbody.innerHTML = ""; // Xóa dữ liệu cũ
 
-            data.forEach((candidate, index) => {
+            data.forEach((election, index) => {
                 const row = `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${candidate.full_name}</td>
-                        <td>${candidate.dob}</td>
-                        <td>${candidate.gender}</td>
-                        <td>${candidate.nationality}</td>
-                        <td>${candidate.ethnicity}</td>
-                        <td>${candidate.religion}</td>
-                        <td>${candidate.hometown}</td>
-                        <td>${candidate.current_residence}</td>
-                        <td>${candidate.education}</td>
-                        <td>${candidate.specialty}</td>
-                        <td>${candidate.academic_degree}</td>
-                        <td>${candidate.political_theory}</td>
-                        <td>${candidate.foreign_language}</td>
-                        <td>${candidate.occupation}</td>
-                        <td>${candidate.workplace}</td>
-                        <td>${candidate.party_join_date}</td>
-                        <td><button onclick="editCandidate('${candidate._id}')">Sửa</button></td>
-                        <td><button onclick="deleteCandidate('${candidate._id}')">Xóa</button></td>
+                        <td>${election.tenCuocBauCu}</td>
+                        <td>${election.khuVuc}</td>
+                        <td>${election.ungCuVien}</td>
+                        <td>${election.thoiGianBatDau}</td>
+                        <td>${election.thoiGianKetThuc}</td>
+                        <td><button onclick="Detail_elections('${election._id}')">Xem</button></td>
                     </tr>
                 `;
                 tbody.innerHTML += row;
             });
         })
-        .catch(error => console.error("Lỗi khi tải danh sách ứng cử viên:", error));
+        .catch(error => console.error("Lỗi khi tải danh sách cuộc bầu cử:", error));
 }
 
-function deleteCandidate(candidateId) {
-        if (!confirm("Bạn có chắc muốn xóa ứng cử viên này?")) return;
-
-        fetch(`/candidates/${candidateId}`, {
-            method: "DELETE"
-        })
+function Detail_elections(_id) {
+    fetch(`/get_elections/${_id}`)
         .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert("Lỗi: " + data.error);
-            } else {
-                alert("Xóa thành công!");
-                location.reload();
-            }
-        })
-        .catch(error => console.error("Lỗi:", error));
-    }
+        .then(election => {
+            document.getElementById("modal_tenCuocBauCu").innerText = election.tenCuocBauCu;
+            document.getElementById("modal_khuVuc").innerText = election.khuVuc;
+            document.getElementById("modal_thoiGianBatDau").innerText = election.thoiGianBatDau;
+            document.getElementById("modal_thoiGianKetThuc").innerText = election.thoiGianKetThuc;
 
-function editCandidate(candidateId) {
-    console.log("Candidate ID:", candidateId);
+            const tbody = document.getElementById("modal_ungCuVien");
+            tbody.innerHTML = ""; // Xóa dữ liệu cũ
 
-    fetch(`/edit_candidates/${candidateId}`)
-        .then(response => response.json())
-        .then(candidate => {
-            console.log("Candidate Data:", candidate);
+            election.ungCuVien.forEach((ucv, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${ucv[0]}</td>
+                        <td>${ucv[1]}</td>
+                        <td>${ucv[2]}</td>
+                        <td>${ucv[3]}</td>
+                        <td>${ucv[4]}</td>
+                        <td>${ucv[5]}</td>
+                        <td>${ucv[6]}</td>
+                        <td>${ucv[7]}</td>
+                        <td>${ucv[8]}</td>
+                        <td>${ucv[9]}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
 
-            document.querySelector(".candidate-edit input[name='full_name']").value = candidate.full_name || "";
-            document.querySelector(".candidate-edit input[name='dob']").value = candidate.dob || "";
-            document.querySelector(".candidate-edit select[name='gender']").value = candidate.gender || "";
-            document.querySelector(".candidate-edit input[name='nationality']").value = candidate.nationality || "";
-            document.querySelector(".candidate-edit input[name='ethnicity']").value = candidate.ethnicity || "";
-            document.querySelector(".candidate-edit input[name='religion']").value = candidate.religion || "";
-            document.querySelector(".candidate-edit input[name='hometown']").value = candidate.hometown || "";
-            document.querySelector(".candidate-edit input[name='current_residence']").value = candidate.current_residence || "";
-            document.querySelector(".candidate-edit input[name='education']").value = candidate.education || "";
-            document.querySelector(".candidate-edit input[name='specialty']").value = candidate.specialty || "";
-            document.querySelector(".candidate-edit input[name='academic_degree']").value = candidate.academic_degree || "";
-            document.querySelector(".candidate-edit input[name='political_theory']").value = candidate.political_theory || "";
-            document.querySelector(".candidate-edit input[name='foreign_language']").value = candidate.foreign_language || "";
-            document.querySelector(".candidate-edit input[name='occupation']").value = candidate.occupation || "";
-            document.querySelector(".candidate-edit input[name='workplace']").value = candidate.workplace || "";
-            document.querySelector(".candidate-edit input[name='party_join_date']").value = candidate.party_join_date || "";
-
-            // Lưu candidateId vào form
-            document.querySelector(".candidate-edit form").setAttribute("data-id", candidateId);
-
-            // Hiển thị form chỉnh sửa
-            document.querySelector(".candidate-edit").style.display = "block";
+            document.getElementById("electionModal").style.display = "block";
         })
         .catch(error => console.error("Lỗi khi lấy dữ liệu ứng viên:", error));
 }
 
-// Xử lý submit form chỉnh sửa
-document.querySelector(".candidate-edit form").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const candidateId = document.querySelector(".candidate-edit form").getAttribute("data-id");
-    if (!candidateId) {
-        console.error("Lỗi: candidateId không xác định!");
-        return;
-    }
-
-    const formData = new FormData(this);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
-    });
-
-    fetch(`/edit_candidates/${candidateId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(jsonData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message || "Có lỗi xảy ra!");
-        if (data.message) {
-            location.reload();
-        }
-    })
-    .catch(error => console.error("Lỗi:", error));
-});
+function closeModal() {
+    document.getElementById("electionModal").style.display = "none";
+}

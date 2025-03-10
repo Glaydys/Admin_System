@@ -13,7 +13,8 @@
     <h2>ADMIN</h2>
     <ul>
         <li class="menu-item active" data-target="dashboard"><i class="fa fa-home"></i>Dashboard</li>
-        <li class="menu-item" data-target="users" onclick="loadUsers()"><i class="fa fa-users"></i>Quản lý người dùng</li>
+        <li class="menu-item" data-target="users" onclick="loadUsers()"><i class="fa fa-users"></i>Quản lý người dùng
+        </li>
         <li class="menu-item" data-target="elections"><i class="fa fa-vote-yea"></i>Quản lý bầu cử</li>
         <button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Đăng xuất</button>
     </ul>
@@ -38,7 +39,7 @@
             <thead>
             <tr>
                 <th>STT</th>
-                <th>Phê duyệt </th>
+                <th>Phê duyệt</th>
                 <th>Họ và tên</th>
                 <th>Ngày sinh</th>
                 <th>Quê quán</th>
@@ -46,7 +47,7 @@
                 <th>Hình Ảnh</th>
                 <!-- <th>Blockchain_hash</th>
                 <th>Vote</th> -->
-                
+
             </tr>
             </thead>
             <tbody>
@@ -56,34 +57,18 @@
 
     <div class="elections">
         <h2>Quản lý Bầu Cử</h2>
-        <button id="btnAddCandidate">Thêm</button>
+        <button id="btnThemCuocBauCu">Thêm</button>
+
         <table>
             <thead>
             <tr>
-                <th rowspan="2">TT</th>
-                <th rowspan="2">Họ và tên</th>
-                <th rowspan="2">Ngày tháng năm sinh</th>
-                <th rowspan="2">Giới tính</th>
-                <th rowspan="2">Quốc tịch</th>
-                <th rowspan="2">Dân tộc</th>
-                <th rowspan="2">Tôn giáo</th>
-                <th rowspan="2">Quê quán</th>
-                <th rowspan="2">Nơi ở hiện nay</th>
-                <th colspan="5" style="vertical-align: middle;text-align:center">Trình độ</th>
-                <th rowspan="2">Nghề nghiệp, chức vụ</th>
-                <th rowspan="2">Nơi công tác</th>
-                <th rowspan="2">Ngày vào Đảng (nếu có)</th>
-                <th rowspan="2">Sửa</th>
-                <th rowspan="2">Xóa</th>
-            </tr>
-            <tr>
-                <th>Giáo dục phổ thông</th>
-                <th>Chuyên môn, nghiệp vụ</th>
-                <th>Học hàm, học vị</th>
-                <th>Lý luận chính trị</th>
-                <th>Ngoại ngữ</th>
-            </tr>
-            <tr>
+                <th>STT</th>
+                <th>Tên cuộc bầu cử</th>
+                <th>Khu vực</th>
+                <th>Số lượng ứng cử viên</th>
+                <th>Thời gian bắt đầu</th>
+                <th>Thời gian kết thúc</th>
+                <th>Chi tiết</th>
             </tr>
             </thead>
             <tbody>
@@ -91,196 +76,101 @@
         </table>
     </div>
 
-    <div class="candidate-registration">
-        <h2>Đăng ký Ứng Cử Viên</h2>
-        <form>
-            <div class="form-group">
-                <label>Họ và tên:</label>
-                <input type="text" name="full_name" required>
-            </div>
+    <div class="formThemCuocBauCu">
+        <h2>Thêm cuộc bầu cử</h2>
+        <form id="electionForm">
+            <label for="tenCuocBauCu">Tên cuộc bầu cử:</label>
+            <input type="text" id="tenCuocBauCu" required>
 
-            <div class="form-group">
-                <label>Ngày tháng năm sinh:</label>
-                <input type="date" name="dob" required>
-            </div>
+            <label for="khuVuc">Khu vực:</label>
+            <input type="text" id="khuVuc" required>
 
-            <div class="form-group">
-                <label>Giới tính:</label>
-                <select name="gender">
+            <label>Ứng cử viên:</label>
+            <button type="button" onclick="hienFormUngCuVien()">Thêm ứng cử viên</button>
+
+            <!-- Form ẩn để nhập thông tin ứng cử viên -->
+            <div id="formUngCuVien" style="display: none; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
+                <label for="full_name">Họ và tên:</label>
+                <input type="text" name="full_name" id="full_name">
+
+                <label for="dob">Ngày sinh:</label>
+                <input type="date" name="dob" id="dob">
+
+                <label for="gender">Giới tính:</label>
+                <select name="gender" id="gender">
                     <option value="Nam">Nam</option>
                     <option value="Nữ">Nữ</option>
                     <option value="Khác">Khác</option>
                 </select>
+
+                <label for="nationality">Quốc tịch:</label>
+                <input type="text" name="nationality" id="nationality">
+
+                <label for="ethnicity">Dân tộc:</label>
+                <input type="text" name="ethnicity" id="ethnicity">
+
+                <label for="religion">Tôn giáo:</label>
+                <input type="text" name="religion" id="religion">
+
+                <label for="hometown">Quê quán:</label>
+                <input type="text" name="hometown" id="hometown">
+
+                <label for="current_residence">Nơi ở hiện nay:</label>
+                <input type="text" name="current_residence" id="current_residence">
+
+                <label for="occupation">Nghề nghiệp, chức vụ:</label>
+                <input type="text" name="occupation" id="occupation">
+
+                <label for="workplace">Nơi công tác:</label>
+                <input type="text" name="workplace" id="workplace">
+
+                <button type="button" onclick="themUngCuVien()">Done</button>
+                <button type="button" onclick="anFormUngCuVien()">Hủy</button>
             </div>
+            <ul id="danhSachUngCuVien"></ul>
 
-            <div class="form-group">
-                <label>Quốc tịch:</label>
-                <input type="text" name="nationality" required>
-            </div>
+            <label for="thoiGianBatDau">Thời gian bắt đầu:</label>
+            <input type="datetime-local" id="thoiGianBatDau" required>
 
-            <div class="form-group">
-                <label>Dân tộc:</label>
-                <input type="text" name="ethnicity">
-            </div>
+            <label for="thoiGianKetThuc">Thời gian kết thúc:</label>
+            <input type="datetime-local" id="thoiGianKetThuc" required>
 
-            <div class="form-group">
-                <label>Tôn giáo:</label>
-                <input type="text" name="religion">
-            </div>
-
-            <div class="form-group">
-                <label>Quê quán:</label>
-                <input type="text" name="hometown" required>
-            </div>
-
-            <div class="form-group">
-                <label>Nơi ở hiện nay:</label>
-                <input type="text" name="current_residence" required>
-            </div>
-
-            <h3>Trình độ</h3>
-            <br>
-
-            <div class="form-group">
-                <label>Giáo dục phổ thông:</label>
-                <input type="text" name="education">
-            </div>
-
-            <div class="form-group">
-                <label>Chuyên môn, nghiệp vụ:</label>
-                <input type="text" name="specialty">
-            </div>
-
-            <div class="form-group">
-                <label>Học hàm, học vị:</label>
-                <input type="text" name="academic_degree">
-            </div>
-
-            <div class="form-group">
-                <label>Lý luận chính trị:</label>
-                <input type="text" name="political_theory">
-            </div>
-
-            <div class="form-group">
-                <label>Ngoại ngữ:</label>
-                <input type="text" name="foreign_language">
-            </div>
-
-            <div class="form-group">
-                <label>Nghề nghiệp, chức vụ:</label>
-                <input type="text" name="occupation">
-            </div>
-
-            <div class="form-group">
-                <label>Nơi công tác:</label>
-                <input type="text" name="workplace">
-            </div>
-
-            <div class="form-group">
-                <label>Ngày vào Đảng (nếu có):</label>
-                <input type="date" name="party_join_date">
-            </div>
-
-            <button type="submit" class="submit-btn">Đăng ký</button>
+            <button type="submit">Lưu</button>
+            <button type="button" id="btnHuy">Hủy</button>
         </form>
     </div>
 
-<div class="candidate-edit">
-    <h2>Chỉnh sửa Ứng Cử Viên</h2>
-    <form>
-        <div class="form-group">
-            <label>Họ và tên:</label>
-            <input type="text" name="full_name" required>
+    <div id="electionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="text-align: center">Chi tiết cuộc bầu cử</h2>
+            <p><strong>Tên:</strong> <span id="modal_tenCuocBauCu"></span></p>
+            <p><strong>Khu vực:</strong> <span id="modal_khuVuc"></span></p>
+            <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
+            <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
+
+            <h3>Danh sách ứng cử viên</h3>
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Họ và tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Giới tính</th>
+                    <th>Quốc tịch</th>
+                    <th>Dân tộc</th>
+                    <th>Tôn giáo</th>
+                    <th>Quê quán</th>
+                    <th>Nơi ở hiện nay</th>
+                    <th>Nghề nghiệp, chức vụ</th>
+                    <th>Nơi công tác</th>
+                </tr>
+                </thead>
+                <tbody id="modal_ungCuVien"></tbody>
+            </table>
         </div>
-
-        <div class="form-group">
-            <label>Ngày tháng năm sinh:</label>
-            <input type="date" name="dob" required>
-        </div>
-
-        <div class="form-group">
-            <label>Giới tính:</label>
-            <select name="gender">
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Quốc tịch:</label>
-            <input type="text" name="nationality" required>
-        </div>
-
-        <div class="form-group">
-            <label>Dân tộc:</label>
-            <input type="text" name="ethnicity">
-        </div>
-
-        <div class="form-group">
-            <label>Tôn giáo:</label>
-            <input type="text" name="religion">
-        </div>
-
-        <div class="form-group">
-            <label>Quê quán:</label>
-            <input type="text" name="hometown" required>
-        </div>
-
-        <div class="form-group">
-            <label>Nơi ở hiện nay:</label>
-            <input type="text" name="current_residence" required>
-        </div>
-
-        <h3>Trình độ</h3>
-        <br>
-
-        <div class="form-group">
-            <label>Giáo dục phổ thông:</label>
-            <input type="text" name="education">
-        </div>
-
-        <div class="form-group">
-            <label>Chuyên môn, nghiệp vụ:</label>
-            <input type="text" name="specialty">
-        </div>
-
-        <div class="form-group">
-            <label>Học hàm, học vị:</label>
-            <input type="text" name="academic_degree">
-        </div>
-
-        <div class="form-group">
-            <label>Lý luận chính trị:</label>
-            <input type="text" name="political_theory">
-        </div>
-
-        <div class="form-group">
-            <label>Ngoại ngữ:</label>
-            <input type="text" name="foreign_language">
-        </div>
-
-        <div class="form-group">
-            <label>Nghề nghiệp, chức vụ:</label>
-            <input type="text" name="occupation">
-        </div>
-
-        <div class="form-group">
-            <label>Nơi công tác:</label>
-            <input type="text" name="workplace">
-        </div>
-
-        <div class="form-group">
-            <label>Ngày vào Đảng (nếu có):</label>
-            <input type="date" name="party_join_date">
-        </div>
-
-        <button type="submit" class="submit-btn">Cập nhật</button>
-    </form>
+    </div>
 </div>
-
-</div>
-
 </body>
 
 <script src="{{ url_for('static', filename='script/home.js') }}"></script>
