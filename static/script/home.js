@@ -33,7 +33,11 @@ function loadUsers() {
                     <td>${user.date_of_birth || 'Chưa cập nhật'}</td>
                     <td>${user.hometown || 'Chưa cập nhật'}</td>
                     <td>${user.phone || 'Chưa cập nhật'}</td>
-                    <td>${user.id_document_path || 'Chưa cập nhật'}</td>
+                    <td>
+                    ${user.id_document_path
+                    ? `<img src="${user.id_document_path}" alt="Giấy tờ tùy thân của ${user.fullname}" style="max-width: 100px; max-height: 100px;">`
+                    : 'Chưa có'}
+                    </td>
                 </tr>
             `).join('');
             document.querySelector('.users').classList.add('active');
