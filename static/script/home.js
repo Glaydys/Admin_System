@@ -181,6 +181,7 @@ document.getElementById("electionForm").addEventListener("submit", async functio
 
         let result = await response.json();
         alert(result.message);
+        window.location.reload();
     } catch (error) {
         console.error("Lỗi:", error);
     }
