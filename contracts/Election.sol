@@ -5,30 +5,30 @@ contract Election {
     struct Candidate {
         uint id;
         string name;
-        string dob; // Ngày sinh
-        string gender; // Giới tính
-        string nationality; // Quốc tịch
-        string ethnicity; // Dân tộc
-        string religion; // Tôn giáo
-        string hometown; // Quê quán
-        string currentResidence; // Nơi ở hiện tại
-        string occupation; // Nghề nghiệp
-        string workplace; // Nơi làm việc
-        bool isApproved; // Đã phê duyệt hay chưa (Thêm dòng này)
+        string dob; 
+        string gender; 
+        string nationality; 
+        string ethnicity; 
+        string religion; 
+        string hometown; 
+        string currentResidence; 
+        string occupation; 
+        string workplace; 
+        bool isApproved; 
     }
 
     struct ElectionDetails {
         uint id;
-        string name; // Tên cuộc bầu cử
-        string region; // Khu vực
-        uint startTime; // Thời gian bắt đầu
-        uint endTime; // Thời gian kết thúc
-        mapping(uint => Candidate) candidates; // Danh sách ứng viên
-        uint candidateCount; // Số lượng ứng viên
+        string name; 
+        string region; 
+        uint startTime; 
+        uint endTime; 
+        mapping(uint => Candidate) candidates; 
+        uint candidateCount;
     }
 
-    mapping(uint => ElectionDetails) public elections; // Danh sách cuộc bầu cử
-    uint public electionCount; // Số lượng cuộc bầu cử
+    mapping(uint => ElectionDetails) public elections; 
+    uint public electionCount; 
 
     event ElectionCreated(uint id, string name, string region, uint startTime, uint endTime);
     event CandidateAdded(uint electionId, uint candidateId, string name);
