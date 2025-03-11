@@ -4,6 +4,8 @@ from pymongo import MongoClient
 from bson import ObjectId
 import bcrypt, os
 from datetime import datetime
+from web3 import Web3
+import json
 
 
 def admin_login(request):
@@ -72,6 +74,27 @@ def admin_logout():
     session.pop('admin_logged_in', None)  # Xóa session variable 'admin_logged_in'
     return jsonify({'success': True, 'message': 'Đăng xuất admin thành công'}), 200  # OK
 
+# Kết nối với Ganache
+w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
+
+if w3.is_connected():
+    print(" Kết nối thành công với Ganache!")
+    accounts = w3.eth.accounts
+    if accounts:
+        w3.eth.default_account = accounts[0]  # Lấy tài khoản đầu tiên
+        print("Tài khoản mặc định:", w3.eth.default_account)
+    else:
+        raise Exception(" Không tìm thấy tài khoản nào trong Ganache!")
+else:
+    raise Exception(" Kết nối Web3 thất bại!")
+contract_address = '0x43a995194cddbdf05edc3c743c07ec71071515f5'  # Địa chỉ smart contract
+contract_address = w3.to_checksum_address(contract_address)
+
+# Tải ABI từ file Election.json
+with open('abi/Election.json') as f:
+   abi = json.load(f)  # Đọc ABI từ file JSON
+
+contract = w3.eth.contract(address=contract_address, abi=abi)  # Tạo instance của contract
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -126,16 +149,48 @@ app.add_url_rule('/admin/approve_user/<user_id>', view_func=approve_user_endpoin
 
 
 @app.route("/add_election", methods=["POST"])
-def add_election():
+def create_election():
     data = request.json
-    result = elections_collection.insert_one(data)
-    return jsonify({"message": "Thêm thành công!", "id": str(result.inserted_id)})
+    try:
+        # Chuyển đổi datetime thành timestamp (float)
+        start_time = datetime.strptime(data['thoiGianBatDau'], "%Y-%m-%dT%H:%M").timestamp()
+        end_time = datetime.strptime(data['thoiGianKetThuc'], "%Y-%m-%dT%H:%M").timestamp()
 
+        # Gọi hàm Smart Contract
+        tx_hash = contract.functions.createElection(
+            data['tenCuocBauCu'],
+            data['khuVuc'],
+            int(start_time),    # timestamp dạng số nguyên (cho Smart Contract)
+            int(end_time)       # timestamp dạng số nguyên (cho Smart Contract)
+        ).transact({'from': w3.eth.default_account})
 
-def format_datetime(dt_str):
-    dt = datetime.strptime(dt_str, "%Y-%m-%dT%H:%M")
+        # Chờ xác nhận giao dịch
+        w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        # Lưu timestamp dạng float vào MongoDB
+        data['thoiGianBatDau'] = start_time
+        data['thoiGianKetThuc'] = end_time
+
+        # Lưu vào MongoDB
+        result = elections_collection.insert_one(data)
+
+        return jsonify({
+            "message": "Cuộc bầu cử đã được tạo thành công!",
+            "id": str(result.inserted_id),
+            "transaction_hash": tx_hash.hex()
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+def format_datetime(dt_value):
+    if isinstance(dt_value, float) or isinstance(dt_value, int):
+        dt = datetime.fromtimestamp(dt_value)  # Chuyển timestamp (float/int) thành datetime
+    elif isinstance(dt_value, str):
+        dt = datetime.strptime(dt_value, "%Y-%m-%dT%H:%M")
+    else:
+        return "Không xác định"
     return dt.strftime("%d/%m/%Y %H:%M")
-
 
 @app.route('/get_elections', methods=['GET'])
 def get_elections():
