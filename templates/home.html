@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/static/css/home.css">
+    <script src="https://esgoo.net/scripts/jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -81,52 +82,21 @@
         <form id="electionForm">
             <label for="tenCuocBauCu">Tên cuộc bầu cử:</label>
             <input type="text" id="tenCuocBauCu" required>
-
+    
             <label for="khuVuc">Khu vực:</label>
-            <input type="text" id="khuVuc" required>
-
-            <label>Ứng cử viên:</label>
-            <button type="button" onclick="hienFormUngCuVien()">Thêm ứng cử viên</button>
-
-            <!-- Form ẩn để nhập thông tin ứng cử viên -->
-            <div id="formUngCuVien" style="display: none; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
-                <label for="full_name">Họ và tên:</label>
-                <input type="text" name="full_name" id="full_name">
-
-                <label for="dob">Ngày sinh:</label>
-                <input type="date" name="dob" id="dob">
-
-                <label for="gender">Giới tính:</label>
-                <select name="gender" id="gender">
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                    <option value="Khác">Khác</option>
+            <div class="css_select_div">
+                <select class="css_select" id="tinh" name="tinh">
+                    <option value="0">Chọn Tỉnh Thành</option>
+                </select> 
+                <select class="css_select" id="quan" name="quan">
+                    <option value="0">Chọn Quận Huyện</option>
+                </select> 
+                <select class="css_select" id="phuong" name="phuong">
+                    <option value="0">Chọn Phường Xã</option>
                 </select>
-
-                <label for="nationality">Quốc tịch:</label>
-                <input type="text" name="nationality" id="nationality">
-
-                <label for="ethnicity">Dân tộc:</label>
-                <input type="text" name="ethnicity" id="ethnicity">
-
-                <label for="religion">Tôn giáo:</label>
-                <input type="text" name="religion" id="religion">
-
-                <label for="hometown">Quê quán:</label>
-                <input type="text" name="hometown" id="hometown">
-
-                <label for="current_residence">Nơi ở hiện nay:</label>
-                <input type="text" name="current_residence" id="current_residence">
-
-                <label for="occupation">Nghề nghiệp, chức vụ:</label>
-                <input type="text" name="occupation" id="occupation">
-
-                <label for="workplace">Nơi công tác:</label>
-                <input type="text" name="workplace" id="workplace">
-
-                <button type="button" onclick="themUngCuVien()">Done</button>
-                <button type="button" onclick="anFormUngCuVien()">Hủy</button>
             </div>
+    
+          
             <ul id="danhSachUngCuVien"></ul>
 
             <label for="thoiGianBatDau">Thời gian bắt đầu:</label>
@@ -148,31 +118,120 @@
             <p><strong>Khu vực:</strong> <span id="modal_khuVuc"></span></p>
             <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
             <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
-
+    
             <h3>Danh sách ứng cử viên</h3>
             <table border="1">
                 <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Họ và tên</th>
-                    <th>Ngày sinh</th>
-                    <th>Giới tính</th>
-                    <th>Quốc tịch</th>
-                    <th>Dân tộc</th>
-                    <th>Tôn giáo</th>
-                    <th>Quê quán</th>
-                    <th>Nơi ở hiện nay</th>
-                    <th>Nghề nghiệp, chức vụ</th>
-                    <th>Nơi công tác</th>
-                </tr>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>Quốc tịch</th>
+                        <th>Dân tộc</th>
+                        <th>Tôn giáo</th>
+                        <th>Quê quán</th>
+                        <th>Nơi ở hiện nay</th>
+                        <th>Nghề nghiệp, chức vụ</th>
+                        <th>Nơi công tác</th>
+                    </tr>
                 </thead>
                 <tbody id="modal_ungCuVien"></tbody>
             </table>
+    
+            <!-- Nút mở form thêm ứng cử viên -->
+            <button type="button" onclick="hienFormUngCuVien()">Thêm ứng cử viên</button>
+    
+            <!-- Form ẩn để nhập thông tin ứng cử viên -->
+            <div id="formUngCuVien" style="display: none; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
+                <h3>Thêm Ứng Cử Viên</h3>
+                <label for="full_name">Họ và tên:</label>
+                <input type="text" id="full_name" required>
+    
+                <label for="dob">Ngày sinh:</label>
+                <input type="date" id="dob" required>
+    
+                <label for="gender">Giới tính:</label>
+                <select id="gender">
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
+    
+                <label for="nationality">Quốc tịch:</label>
+                <input type="text" id="nationality" required>
+    
+                <label for="ethnicity">Dân tộc:</label>
+                <input type="text" id="ethnicity" required>
+    
+                <label for="religion">Tôn giáo:</label>
+                <input type="text" id="religion">
+    
+                <label for="hometown">Quê quán:</label>
+                <input type="text" id="hometown" required>
+    
+                <label for="current_residence">Nơi ở hiện nay:</label>
+                <input type="text" id="current_residence" required>
+    
+                <label for="occupation">Nghề nghiệp, chức vụ:</label>
+                <input type="text" id="occupation" required>
+    
+                <label for="workplace">Nơi công tác:</label>
+                <input type="text" id="workplace" required>
+    
+                <button type="button" onclick="themUngCuVien()">Thêm</button>
+                <button type="button" onclick="anFormUngCuVien()">Hủy</button>
+            </div>
         </div>
+    </div>
+    
     </div>
 </div>
 </body>
 
+<script>
+    $(document).ready(function() {
+        // Lấy danh sách tỉnh thành
+        $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function(data_tinh) {        
+            if (data_tinh.error == 0) {
+                $.each(data_tinh.data, function(key_tinh, val_tinh) {
+                    $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                });
+
+                $("#tinh").change(function() {
+                    var idtinh = $(this).val();
+                    $("#quan").html('<option value="0">Chọn Quận Huyện</option>');
+                    $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                    if (idtinh !== "0") {
+                        $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function(data_quan) {
+                            if (data_quan.error == 0) {
+                                $.each(data_quan.data, function(key_quan, val_quan) {
+                                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                                });
+
+                                $("#quan").change(function() {
+                                    var idquan = $(this).val();
+                                    $("#phuong").html('<option value="0">Chọn Phường Xã</option>');
+
+                                    if (idquan !== "0") {
+                                        $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function(data_phuong) {
+                                            if (data_phuong.error == 0) {
+                                                $.each(data_phuong.data, function(key_phuong, val_phuong) {
+                                                    $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
 <script src="{{ url_for('static', filename='script/home.js') }}"></script>
 
 </html>
