@@ -156,10 +156,16 @@ def create_election():
         start_time = datetime.strptime(data['thoiGianBatDau'], "%Y-%m-%dT%H:%M").timestamp()
         end_time = datetime.strptime(data['thoiGianKetThuc'], "%Y-%m-%dT%H:%M").timestamp()
 
+        # Tạo danh sách ứng cử viên rỗng nếu không có
+        if "ungCuVien" not in data:
+            data["ungCuVien"] = []
+
         # Gọi hàm Smart Contract
         tx_hash = contract.functions.createElection(
             data['tenCuocBauCu'],
-            data['khuVuc'],
+            data['tinh'],
+            data['quan'],
+            data['phuong'],
             int(start_time),    # timestamp dạng số nguyên (cho Smart Contract)
             int(end_time)       # timestamp dạng số nguyên (cho Smart Contract)
         ).transact({'from': w3.eth.default_account})
@@ -199,7 +205,9 @@ def get_elections():
         elections_list = [{
             "_id": str(election["_id"]),
             "tenCuocBauCu": election["tenCuocBauCu"],
-            "khuVuc": election.get("khuVuc", ""),
+            "tinh": election.get("tinh", ""),
+            "quan": election.get("quan", ""),
+            "phuong": election.get("phuong", ""),
             "ungCuVien": len(election.get("ungCuVien", "")),
             "thoiGianBatDau": format_datetime(election.get("thoiGianBatDau", "")),
             "thoiGianKetThuc": format_datetime(election.get("thoiGianKetThuc", "")),
@@ -219,7 +227,9 @@ def get_election_detail(_id):
     election_detail = {
         "_id": str(election["_id"]),
         "tenCuocBauCu": election["tenCuocBauCu"],
-        "khuVuc": election.get("khuVuc", ""),
+        "tinh": election.get("tinh", ""),
+        "quan": election.get("quan", ""),
+        "phuong": election.get("phuong", ""),
         "thoiGianBatDau": format_datetime(election.get("thoiGianBatDau", "")),
         "thoiGianKetThuc": format_datetime(election.get("thoiGianKetThuc", "")),
         "ungCuVien": election.get("ungCuVien", [])  # Trả về danh sách ứng cử viên đầy đủ
@@ -227,6 +237,35 @@ def get_election_detail(_id):
 
     return jsonify(election_detail), 200
 
+@app.route("/add_candidate_elections/<_id>", methods=["POST"])
+def add_candidate_elections(_id):
+    data = request.json  # Nhận dữ liệu ứng viên từ frontend
+
+    election = elections_collection.find_one({"_id": ObjectId(_id)})
+    if not election:
+        return jsonify({"error": "Election not found"}), 404
+
+    new_candidate = {
+        "name": data.get("name"),
+        "dob": data.get("dob"),
+        "gender": data.get("gender"),
+        "nationality": data.get("nationality"),
+        "ethnicity": data.get("ethnicity"),
+        "religion": data.get("religion"),
+        "hometown": data.get("hometown"),
+        "currentResidence": data.get("currentResidence"),
+        "occupation": data.get("occupation"),
+        "workplace": data.get("workplace"),
+        "isApproved": False  # Mặc định chưa được phê duyệt
+    }
+
+    # Thêm ứng viên vào danh sách ungCuVien
+    elections_collection.update_one(
+        {"_id": ObjectId(_id)},
+        {"$push": {"ungCuVien": new_candidate}}
+    )
+
+    return jsonify({"message": "Candidate added successfully"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=8800)

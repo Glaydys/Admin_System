@@ -65,7 +65,9 @@
             <tr>
                 <th>STT</th>
                 <th>Tên cuộc bầu cử</th>
-                <th>Khu vực</th>
+                <th>Tỉnh</th>
+                <th>Quận</th>
+                <th>Phường</th>
                 <th>Số lượng ứng cử viên</th>
                 <th>Thời gian bắt đầu</th>
                 <th>Thời gian kết thúc</th>
@@ -82,22 +84,21 @@
         <form id="electionForm">
             <label for="tenCuocBauCu">Tên cuộc bầu cử:</label>
             <input type="text" id="tenCuocBauCu" required>
-    
-            <label for="khuVuc">Khu vực:</label>
+
             <div class="css_select_div">
+                <label for="tinh">Tỉnh:</label>
                 <select class="css_select" id="tinh" name="tinh">
                     <option value="0">Chọn Tỉnh Thành</option>
-                </select> 
+                </select>
+                <label for="quan">Quận:</label>
                 <select class="css_select" id="quan" name="quan">
                     <option value="0">Chọn Quận Huyện</option>
-                </select> 
+                </select>
+                <label for="phuong">Phường:</label>
                 <select class="css_select" id="phuong" name="phuong">
                     <option value="0">Chọn Phường Xã</option>
                 </select>
             </div>
-    
-          
-            <ul id="danhSachUngCuVien"></ul>
 
             <label for="thoiGianBatDau">Thời gian bắt đầu:</label>
             <input type="datetime-local" id="thoiGianBatDau" required>
@@ -115,7 +116,9 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 style="text-align: center">Chi tiết cuộc bầu cử</h2>
             <p><strong>Tên:</strong> <span id="modal_tenCuocBauCu"></span></p>
-            <p><strong>Khu vực:</strong> <span id="modal_khuVuc"></span></p>
+            <p><strong>Tỉnh:</strong> <span id="modal_tinh"></span></p>
+            <p><strong>Quận:</strong> <span id="modal_quan"></span></p>
+            <p><strong>Phường:</strong> <span id="modal_phuong"></span></p>
             <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
             <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
     

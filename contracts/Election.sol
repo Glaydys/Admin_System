@@ -20,7 +20,9 @@ contract Election {
     struct ElectionDetails {
         uint id;
         string name; 
-        string region; 
+        string tinh;
+        string quan;
+        string phuong;
         uint startTime; 
         uint endTime; 
         mapping(uint => Candidate) candidates; 
@@ -30,23 +32,25 @@ contract Election {
     mapping(uint => ElectionDetails) public elections; 
     uint public electionCount; 
 
-    event ElectionCreated(uint id, string name, string region, uint startTime, uint endTime);
+    event ElectionCreated(uint id, string name, string tinh, string quan, string phuong, uint startTime, uint endTime);
     event CandidateAdded(uint electionId, uint candidateId, string name);
 
     // Tạo cuộc bầu cử
-    function createElection(string memory _name, string memory _region, uint _startTime, uint _endTime) public {
+    function createElection(string memory _name, string memory _tinh, string memory _quan, string memory _phuong, uint _startTime, uint _endTime) public {
         require(_endTime > _startTime, unicode"Thời gian kết thúc phải lớn hơn thời gian bắt đầu");
 
         electionCount++;
         ElectionDetails storage newElection = elections[electionCount];
         newElection.id = electionCount;
         newElection.name = _name;
-        newElection.region = _region;
+        newElection.tinh = _tinh;
+        newElection.quan = _quan;
+        newElection.phuong = _phuong;
         newElection.startTime = _startTime;
         newElection.endTime = _endTime;
         newElection.candidateCount = 0;
 
-        emit ElectionCreated(electionCount, _name, _region, _startTime, _endTime);
+        emit ElectionCreated(electionCount, _name, _tinh, _quan, _phuong ,_startTime, _endTime);
     }
 
     // Thêm ứng viên vào cuộc bầu cử
@@ -102,7 +106,9 @@ contract Election {
         view
         returns (
             string memory name,
-            string memory region,
+            string memory tinh,
+            string memory quan,
+            string memory phuong,
             uint startTime,
             uint endTime,
             uint candidateCount
@@ -113,7 +119,9 @@ contract Election {
 
         return (
             election.name,
-            election.region,
+            election.tinh,
+            election.quan,
+            election.phuong,
             election.startTime,
             election.endTime,
             election.candidateCount
