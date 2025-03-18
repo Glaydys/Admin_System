@@ -6,7 +6,13 @@ import bcrypt, os
 from datetime import datetime
 from web3 import Web3
 import json
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
+MONGODB_URI = os.getenv("MONGODB_URI")
+client = MongoClient(MONGODB_URI)
+provider = os.getenv("WEB3_PROVIDER")
+contract_address = os.getenv("CONTRACT_ADDRESS")
 
 def admin_login(request):
     fullname = request.form.get('fullname')
@@ -75,20 +81,23 @@ def admin_logout():
     return jsonify({'success': True, 'message': 'Đăng xuất admin thành công'}), 200  # OK
 
 # Kết nối với Ganache
-w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
+w3 = Web3(Web3.HTTPProvider(provider))
 
 if w3.is_connected():
-    print(" Kết nối thành công với Ganache!")
+    print("Kết nối thành công với Ganache!")
     accounts = w3.eth.accounts
     if accounts:
-        w3.eth.default_account = accounts[0]  # Lấy tài khoản đầu tiên
+        w3.eth.default_account = accounts[0]
         print("Tài khoản mặc định:", w3.eth.default_account)
     else:
-        raise Exception(" Không tìm thấy tài khoản nào trong Ganache!")
+        raise Exception("Không tìm thấy tài khoản nào trong Ganache!")
 else:
-    raise Exception(" Kết nối Web3 thất bại!")
-contract_address = '0x43a995194cddbdf05edc3c743c07ec71071515f5'  # Địa chỉ smart contract
+    raise Exception("Kết nối Web3 thất bại!")
+
+# Chuyển đổi địa chỉ contract sang dạng checksum
 contract_address = w3.to_checksum_address(contract_address)
+print("Địa chỉ smart contract:", contract_address)
+
 
 # Tải ABI từ file Election.json
 with open('abi/Election.json') as f:
@@ -99,8 +108,7 @@ contract = w3.eth.contract(address=contract_address, abi=abi)  # Tạo instance 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-client = MongoClient("mongodb+srv://Nhom07:Nhom07VAA@cluster0.fg6a2.mongodb.net/?retryWrites=true&w=majority",
-                     tlsCAFile=certifi.where())
+client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 
 db = client.get_database('Block')
 users_collection = db.users
