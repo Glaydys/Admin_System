@@ -343,12 +343,38 @@ function loadUngCuVien() {
                         <td>${candidate.occupation}</td>
                         <td>${candidate.workplace || ''}</td>
                         <td>${candidate.party_join_date || ''}</td>
+                        <td>
+                            <span class="${candidate.isApproved ? 'approved' : 'pending'}">
+                                ${candidate.isApproved ? 'Đã duyệt' : 'Chờ duyệt'}
+                            </span>
+                        </td>
+                        <td>
+                            ${!candidate.isApproved ? `<button onclick="approveCandidateForUngCuVienTable('${candidate._id}')">Duyệt</button>` : ''}
+                        </td>
                     </tr>
                 `;
                 ungCuVienTableBody.innerHTML += row;
             });
         })
         .catch(error => console.error("Lỗi khi tải danh sách ứng cử viên:", error));
+}
+
+// Hàm duyệt ứng cử viên trong bảng "Quản lý Ứng Cử Viên"
+function approveCandidateForUngCuVienTable(candidateId) {
+    fetch(`/approve_candidate/${candidateId}`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Lỗi duyệt:", data.error);
+            alert("Lỗi duyệt ứng cử viên: " + data.error);
+        } else {
+            console.log("Duyệt thành công:", data.message);
+            alert("Duyệt ứng cử viên thành công!");
+            loadUngCuVien(); // Tải lại danh sách ứng cử viên để cập nhật trạng thái
+        }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", function () {

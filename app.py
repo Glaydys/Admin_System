@@ -224,6 +224,8 @@ def get_candidates():
         candidate_list = []
         for candidate in candidates:
             candidate['_id'] = str(candidate['_id'])  # Chuyển ObjectId thành string
+            # Đảm bảo trả về isApproved, nếu không có thì mặc định là False
+            candidate['isApproved'] = candidate.get('isApproved', False)
             candidate_list.append(candidate)
         print("Candidate List:", candidate_list)  # In ra danh sách ứng cử viên để kiểm tra
         return jsonify(candidate_list), 200
@@ -288,6 +290,23 @@ def add_candidate_elections(_id):
     )
 
     return jsonify({"message": "Candidate added successfully"}), 200
-
+@app.route("/approve_candidate/<candidate_id>", methods=["POST"])
+def approve_candidate(candidate_id):
+    try:
+        candidate_object_id = ObjectId(candidate_id)
+        candidate = ungcuvien.find_one({"_id": candidate_object_id})
+        if not candidate:
+            return jsonify({"error": "Candidate not found"}), 404
+        if candidate.get("isApproved", False):
+            return jsonify({"message": "Candidate already approved"}), 200
+        # Cập nhật trạng thái isApproved của ứng cử viên trong collection `ungcuvien`
+        ungcuvien.update_one(
+            {"_id": candidate_object_id},
+            {"$set": {"isApproved": True}}
+        )
+        return jsonify({"message": "Candidate approved successfully"}), 200
+    except Exception as e:
+        print(f"Lỗi khi duyệt ứng cử viên (approve_candidate): {e}")
+        return jsonify({"error": str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True, port=8800)
