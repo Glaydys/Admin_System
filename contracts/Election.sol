@@ -5,32 +5,32 @@ contract Election {
     struct Candidate {
         uint id;
         string name;
-        string dob; 
-        string gender; 
-        string nationality; 
-        string ethnicity; 
-        string religion; 
-        string hometown; 
-        string currentResidence; 
-        string occupation; 
-        string workplace; 
-        bool isApproved; 
+        string dob;
+        string gender;
+        string nationality;
+        string ethnicity;
+        string religion;
+        string hometown;
+        string currentResidence;
+        string occupation;
+        string workplace;
+        bool isApproved;
     }
 
     struct ElectionDetails {
         uint id;
-        string name; 
+        string name;
         string tinh;
         string quan;
         string phuong;
-        uint startTime; 
-        uint endTime; 
-        mapping(uint => Candidate) candidates; 
+        uint startTime;
+        uint endTime;
+        mapping(uint => Candidate) candidates;
         uint candidateCount;
     }
 
-    mapping(uint => ElectionDetails) public elections; 
-    uint public electionCount; 
+    mapping(uint => ElectionDetails) public elections;
+    uint public electionCount;
 
     event ElectionCreated(uint id, string name, string tinh, string quan, string phuong, uint startTime, uint endTime);
     event CandidateAdded(uint electionId, uint candidateId, string name);

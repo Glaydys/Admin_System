@@ -122,7 +122,7 @@
             <p><strong>Phường:</strong> <span id="modal_phuong"></span></p>
             <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
             <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
-    
+
             <h3>Danh sách ứng cử viên</h3>
             <table border="1">
                 <thead>
@@ -142,50 +142,16 @@
                 </thead>
                 <tbody id="modal_ungCuVien"></tbody>
             </table>
-    
+
             <!-- Nút mở form thêm ứng cử viên -->
-            <button type="button" onclick="hienFormUngCuVien()">Thêm ứng cử viên</button>
-    
-            <!-- Form ẩn để nhập thông tin ứng cử viên -->
-            <div id="formUngCuVien" style="display: none; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
-                <h3>Thêm Ứng Cử Viên</h3>
-                <label for="full_name">Họ và tên:</label>
-                <input type="text" id="full_name" required>
-    
-                <label for="dob">Ngày sinh:</label>
-                <input type="date" id="dob" required>
-    
-                <label for="gender">Giới tính:</label>
-                <select id="gender">
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                    <option value="Khác">Khác</option>
-                </select>
-    
-                <label for="nationality">Quốc tịch:</label>
-                <input type="text" id="nationality" required>
-    
-                <label for="ethnicity">Dân tộc:</label>
-                <input type="text" id="ethnicity" required>
-    
-                <label for="religion">Tôn giáo:</label>
-                <input type="text" id="religion">
-    
-                <label for="hometown">Quê quán:</label>
-                <input type="text" id="hometown" required>
-    
-                <label for="current_residence">Nơi ở hiện nay:</label>
-                <input type="text" id="current_residence" required>
-    
-                <label for="occupation">Nghề nghiệp, chức vụ:</label>
-                <input type="text" id="occupation" required>
-    
-                <label for="workplace">Nơi công tác:</label>
-                <input type="text" id="workplace" required>
-    
-                <button type="button" onclick="themUngCuVien()">Thêm</button>
-                <button type="button" onclick="anFormUngCuVien()">Hủy</button>
-            </div>
+               <div id="chooseCandidatesSection" style="display: none;">
+    <h3>Chọn ứng cử viên:</h3>
+    <div id="candidateList">
+    </div>
+    <button type="button" onclick="submitCandidates(document.getElementById('electionModal').getAttribute('data-id'))">
+        Thêm ứng cử viên đã chọn
+    </button>
+</div>
         </div>
     </div>
 
@@ -210,8 +176,8 @@
                 <th>Nghề nghiệp, chức vụ</th>
                 <th>Nơi công tác</th>
                 <th>Ngày vào Đảng</th>
-                <th>Trạng thái</th> <!-- Đổi "Chờ duyệt" thành "Trạng thái" để tổng quát hơn -->
-                <th>Hành động</th>    <!-- Thêm cột "Hành động" cho nút "Duyệt" -->
+                <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
         </thead>
         <tbody id="ungCuVienTableBody">

@@ -103,105 +103,106 @@ document.addEventListener("DOMContentLoaded", function () {
     formThemCuocBauCu.classList.remove("active");
 });
 
-function hienFormUngCuVien() {
-    document.getElementById("formUngCuVien").style.display = "block";
-}
 
-function anFormUngCuVien() {
-    document.getElementById("formUngCuVien").style.display = "none";
-}
-
-async function themUngCuVien() {
-    let full_name = document.getElementById("full_name").value.trim();
-    let dob = document.getElementById("dob").value.trim();
-    let gender = document.getElementById("gender").value;
-    let nationality = document.getElementById("nationality").value.trim();
-    let ethnicity = document.getElementById("ethnicity").value.trim();
-    let religion = document.getElementById("religion").value.trim();
-    let hometown = document.getElementById("hometown").value.trim();
-    let current_residence = document.getElementById("current_residence").value.trim();
-    let occupation = document.getElementById("occupation").value.trim();
-    let workplace = document.getElementById("workplace").value.trim();
-
-    if (!full_name || !dob || !gender || !nationality || !ethnicity || !religion || !hometown || !current_residence || !occupation || !workplace) {
-        alert("Vui lòng nhập đầy đủ thông tin ứng cử viên!");
-        return;
-    }
-
-    const electionId = document.getElementById("formUngCuVien").getAttribute("data-id");
-    if (!electionId) {
-        alert("Không tìm thấy ID cuộc bầu cử!");
-        return;
-    }
-
-    // Dữ liệu ứng cử viên cần gửi
-    let candidateData = {
-        name: full_name,
-        dob: dob,
-        gender: gender,
-        nationality: nationality,
-        ethnicity: ethnicity,
-        religion: religion,
-        hometown: hometown,
-        currentResidence: current_residence,
-        occupation: occupation,
-        workplace: workplace
-    };
-
-    try {
-        let response = await fetch(`/add_candidate_elections/${electionId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(candidateData)
-        });
-
-        let result = await response.json();
-
-        if (response.ok) {
-            alert("Ứng cử viên đã được thêm thành công!");
-            hienThiUngCuVien(full_name, dob, gender, nationality, ethnicity, religion, hometown, current_residence, occupation, workplace);
-            anFormUngCuVien(); // Ẩn form
-            document.querySelectorAll("#formUngCuVien input").forEach(input => input.value = "");
-        } else {
-            alert("Lỗi: " + result.error);
-        }
-    } catch (error) {
-        console.error("Lỗi:", error);
-        alert("Có lỗi xảy ra khi thêm ứng cử viên.");
-    }
-}
-
-function hienThiUngCuVien(name, dob, gender, nationality, ethnicity, religion, hometown, current_residence, occupation, workplace) {
-    let tbody = document.getElementById("modal_ungCuVien");
-    let index = tbody.rows.length + 1; // Lấy số hàng hiện tại và tăng lên 1
-
-    let newRow = document.createElement("tr");
-    newRow.innerHTML = `
-        <td>${index}</td> <!-- Tự động tăng index -->
-        <td>${name}</td>
-        <td>${dob}</td>
-        <td>${gender}</td>
-        <td>${nationality}</td>
-        <td>${ethnicity}</td>
-        <td>${religion}</td>
-        <td>${hometown}</td>
-        <td>${current_residence}</td>
-        <td>${occupation}</td>
-        <td>${workplace}</td>
-    `;
-
-    tbody.appendChild(newRow);
-}
+// function hienFormUngCuVien() {
+//     document.getElementById("formUngCuVien").style.display = "block";
+// }
 
 
+// function anFormUngCuVien() {
+//     document.getElementById("formUngCuVien").style.display = "none";
+// }
 
 
-function xoaUngCuVien(button) {
-    let li = button.parentElement;
-    li.remove(); // Xóa ứng cử viên khỏi danh sách
-}
+// async function themUngCuVien() {
+//     let full_name = document.getElementById("full_name").value.trim();
+//     let dob = document.getElementById("dob").value.trim();
+//     let gender = document.getElementById("gender").value;
+//     let nationality = document.getElementById("nationality").value.trim();
+//     let ethnicity = document.getElementById("ethnicity").value.trim();
+//     let religion = document.getElementById("religion").value.trim();
+//     let hometown = document.getElementById("hometown").value.trim();
+//     let current_residence = document.getElementById("current_residence").value.trim();
+//     let occupation = document.getElementById("occupation").value.trim();
+//     let workplace = document.getElementById("workplace").value.trim();
+
+//     if (!full_name || !dob || !gender || !nationality || !ethnicity || !religion || !hometown || !current_residence || !occupation || !workplace) {
+//         alert("Vui lòng nhập đầy đủ thông tin ứng cử viên!");
+//         return;
+//     }
+
+//     const electionId = document.getElementById("formUngCuVien").getAttribute("data-id");
+//     if (!electionId) {
+//         alert("Không tìm thấy ID cuộc bầu cử!");
+//         return;
+//     }
+
+//     // Dữ liệu ứng cử viên cần gửi
+//     let candidateData = {
+//         name: full_name,
+//         dob: dob,
+//         gender: gender,
+//         nationality: nationality,
+//         ethnicity: ethnicity,
+//         religion: religion,
+//         hometown: hometown,
+//         currentResidence: current_residence,
+//         occupation: occupation,
+//         workplace: workplace
+//     };
+
+//     try {
+//         let response = await fetch(`/add_candidate_elections/${electionId}`, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify(candidateData)
+//         });
+
+//         let result = await response.json();
+
+//         if (response.ok) {
+//             alert("Ứng cử viên đã được thêm thành công!");
+//             hienThiUngCuVien(full_name, dob, gender, nationality, ethnicity, religion, hometown, current_residence, occupation, workplace);
+//             anFormUngCuVien(); // Ẩn form
+//             document.querySelectorAll("#formUngCuVien input").forEach(input => input.value = "");
+//         } else {
+//             alert("Lỗi: " + result.error);
+//         }
+//     } catch (error) {
+//         console.error("Lỗi:", error);
+//         alert("Có lỗi xảy ra khi thêm ứng cử viên.");
+//     }
+// }
+
+// function hienThiUngCuVien(name, dob, gender, nationality, ethnicity, religion, hometown, current_residence, occupation, workplace) {
+//     let tbody = document.getElementById("modal_ungCuVien");
+//     let index = tbody.rows.length + 1; // Lấy số hàng hiện tại và tăng lên 1
+
+//     let newRow = document.createElement("tr");
+//     newRow.innerHTML = `
+//         <td>${index}</td> <!-- Tự động tăng index -->
+//         <td>${name}</td>
+//         <td>${dob}</td>
+//         <td>${gender}</td>
+//         <td>${nationality}</td>
+//         <td>${ethnicity}</td>
+//         <td>${religion}</td>
+//         <td>${hometown}</td>
+//         <td>${current_residence}</td>
+//         <td>${occupation}</td>
+//         <td>${workplace}</td>
+//     `;
+
+//     tbody.appendChild(newRow);
+// }
+
+
+// function xoaUngCuVien(button) {
+//     let li = button.parentElement;
+//     li.remove(); // Xóa ứng cử viên khỏi danh sách
+// }
 
 document.getElementById("electionForm").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -268,45 +269,56 @@ function fetchElections() {
         .catch(error => console.error("Lỗi khi tải danh sách cuộc bầu cử:", error));
 }
 
-function Detail_elections(_id) {
-    fetch(`/get_elections/${_id}`)
-        .then(response => response.json())
-        .then(election => {
-            document.getElementById("modal_tenCuocBauCu").innerText = election.tenCuocBauCu;
-            document.getElementById("modal_tinh").innerText = election.tinh;
-            document.getElementById("modal_quan").innerText = election.quan;
-            document.getElementById("modal_phuong").innerText = election.phuong;
-            document.getElementById("modal_thoiGianBatDau").innerText = election.thoiGianBatDau;
-            document.getElementById("modal_thoiGianKetThuc").innerText = election.thoiGianKetThuc;
+async function Detail_elections(_id) {
+    try {
+        const response = await fetch(`/get_elections/${_id}`);
+        const election = await response.json();
 
-            // Hiển thị danh sách ứng cử viên
-            const tbody = document.getElementById("modal_ungCuVien");
-            tbody.innerHTML = ""; // Xóa dữ liệu cũ
+        document.getElementById("modal_tenCuocBauCu").innerText = election.tenCuocBauCu;
+        document.getElementById("modal_tinh").innerText = election.tinh;
+        document.getElementById("modal_quan").innerText = election.quan;
+        document.getElementById("modal_phuong").innerText = election.phuong;
+        document.getElementById("modal_thoiGianBatDau").innerText = election.thoiGianBatDau;
+        document.getElementById("modal_thoiGianKetThuc").innerText = election.thoiGianKetThuc;
 
-            election.ungCuVien.forEach((ucv, index) => {
-                const row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${ucv.name}</td>
-                        <td>${ucv.dob}</td>
-                        <td>${ucv.gender}</td>
-                        <td>${ucv.nationality}</td>
-                        <td>${ucv.ethnicity}</td>
-                        <td>${ucv.religion}</td>
-                        <td>${ucv.hometown}</td>
-                        <td>${ucv.currentResidence}</td>
-                        <td>${ucv.occupation}</td>
-                        <td>${ucv.workplace}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+        const tbody = document.getElementById("modal_ungCuVien");
+        tbody.innerHTML = "";  // Clear existing candidate list
 
-            // Gán ID cuộc bầu cử vào form
-            document.getElementById("formUngCuVien").setAttribute("data-id", _id);
-            document.getElementById("electionModal").style.display = "block";
-        })
-        .catch(error => console.error("Lỗi khi lấy dữ liệu ứng viên:", error));
+        election.ungCuVien.forEach((ucv, index) => {  // Populate table from existing
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${ucv.full_name}</td>
+                    <td>${ucv.dob}</td>
+                    <td>${ucv.gender}</td>
+                    <td>${ucv.nationality}</td>
+                    <td>${ucv.ethnicity}</td>
+                    <td>${ucv.religion}</td>
+                    <td>${ucv.hometown}</td>
+                    <td>${ucv.current_residence}</td>
+                    <td>${ucv.occupation}</td>
+                    <td>${ucv.workplace}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        document.getElementById("electionModal").setAttribute("data-id", _id);
+        document.getElementById("electionModal").style.display = "block";
+
+        const chooseCandidatesSection = document.getElementById("chooseCandidatesSection");
+        if (election.ungCuVien && election.ungCuVien.length > 0) {
+            // Hide the "Add Candidates" section if there are ANY candidates
+            chooseCandidatesSection.style.display = "none";
+        } else {
+            // Show the "Add Candidates" section if there are NO candidates
+            chooseCandidatesSection.style.display = "block";
+            await loadApprovedCandidates(_id); // Load available candidates
+        }
+
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu ứng viên:", error);
+    }
 }
 
 
@@ -384,7 +396,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnLuuUngCuVien = document.getElementById('btnLuuUngCuVien');
     const btnHuyUngCuVien = document.getElementById('btnHuyUngCuVien');
 
+     if(btnLuuUngCuVien){
         btnLuuUngCuVien.addEventListener("click", themUngCuVien);
+     }
+
     loadUngCuVien()
 
     if (btnThemUngCuVien && formThemUngCuVien) {
@@ -441,14 +456,72 @@ async function themUngCuVien(event) {
 
         if (response.ok) {
             alert("Ứng cử viên đã được thêm thành công!");
-            anFormUngCuVien(); // Ẩn form thêm ứng cử viên
+            document.querySelector(".formThemUngCuVien").classList.remove("active");
             loadUngCuVien();
-            ungCuVienForm.reset(); // Reset form
+            ungCuVienForm.reset();
         } else {
             alert("Lỗi: " + result.error);
         }
     } catch (error) {
         console.error("Lỗi:", error);
         alert("Có lỗi xảy ra khi thêm ứng cử viên.");
+    }
+}
+
+
+async function loadApprovedCandidates(electionId) {
+    // Load only the *available* (approved) candidates
+    try {
+        const response = await fetch(`/add_candidate_elections/${electionId}`);
+        const candidates = await response.json();
+
+        const candidateListDiv = document.getElementById("candidateList");
+        candidateListDiv.innerHTML = "";
+
+        candidates.forEach(candidate => {
+            const candidateDiv = document.createElement("div");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = candidate._id;
+            candidateDiv.appendChild(checkbox);
+
+            const label = document.createElement("label");
+            label.htmlFor = candidate._id;
+            label.textContent = `${candidate.full_name} (${candidate.dob})`;
+            candidateDiv.appendChild(label);
+
+            candidateListDiv.appendChild(candidateDiv);
+        });
+
+    } catch (error) {
+        console.error("Error loading approved candidates:", error);
+    }
+}
+async function submitCandidates(electionId) {
+    const selectedCandidates = [];
+    const checkboxes = document.querySelectorAll('#candidateList input[type="checkbox"]:checked');
+    checkboxes.forEach(checkbox => {
+        selectedCandidates.push(checkbox.id);
+    });
+
+    const data = { candidate_ids: selectedCandidates };
+
+    try {
+        const response = await fetch(`/add_candidate_elections/${electionId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        alert(result.message);
+
+        Detail_elections(electionId);
+        document.getElementById("chooseCandidatesSection").style.display = "none";
+    } catch (error) {
+        console.error("Error submitting candidates:", error);
+        alert("Error submitting candidates.  See console for details.");
     }
 }
