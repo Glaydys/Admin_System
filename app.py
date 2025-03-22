@@ -7,12 +7,13 @@ from datetime import datetime
 from web3 import Web3
 import json
 from dotenv import load_dotenv
-import os
+
 load_dotenv()
 MONGODB_URI = os.getenv("MONGODB_URI")
 client = MongoClient(MONGODB_URI)
 provider = os.getenv("WEB3_PROVIDER")
 contract_address = os.getenv("CONTRACT_ADDRESS")
+
 
 def admin_login(request):
     fullname = request.form.get('fullname')
@@ -80,6 +81,7 @@ def admin_logout():
     session.pop('admin_logged_in', None)  # Xóa session variable 'admin_logged_in'
     return jsonify({'success': True, 'message': 'Đăng xuất admin thành công'}), 200  # OK
 
+
 # Kết nối với Ganache
 w3 = Web3(Web3.HTTPProvider(provider))
 
@@ -98,10 +100,9 @@ else:
 contract_address = w3.to_checksum_address(contract_address)
 print("Địa chỉ smart contract:", contract_address)
 
-
 # Tải ABI từ file Election.json
 with open('abi/Election.json') as f:
-   abi = json.load(f)  # Đọc ABI từ file JSON
+    abi = json.load(f)  # Đọc ABI từ file JSON
 
 contract = w3.eth.contract(address=contract_address, abi=abi)  # Tạo instance của contract
 
@@ -114,6 +115,7 @@ db = client.get_database('Block')
 users_collection = db.users
 elections_collection = db.elections
 ungcuvien = db.candidates
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -174,8 +176,8 @@ def create_election():
             data['tinh'],
             data['quan'],
             data['phuong'],
-            int(start_time),    # timestamp dạng số nguyên (cho Smart Contract)
-            int(end_time)       # timestamp dạng số nguyên (cho Smart Contract)
+            int(start_time),  # timestamp dạng số nguyên (cho Smart Contract)
+            int(end_time)  # timestamp dạng số nguyên (cho Smart Contract)
         ).transact({'from': w3.eth.default_account})
 
         # Chờ xác nhận giao dịch
@@ -197,6 +199,7 @@ def create_election():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 def format_datetime(dt_value):
     if isinstance(dt_value, float) or isinstance(dt_value, int):
         dt = datetime.fromtimestamp(dt_value)  # Chuyển timestamp (float/int) thành datetime
@@ -205,6 +208,7 @@ def format_datetime(dt_value):
     else:
         return "Không xác định"
     return dt.strftime("%d/%m/%Y %H:%M")
+
 
 @app.route('/get_elections', methods=['GET'])
 def get_elections():
@@ -225,21 +229,22 @@ def get_elections():
     except Exception as e:
         return jsonify({"error": f"Lỗi khi lấy danh sách cuộc bầu cử: {str(e)}"}), 500
 
+
 @app.route('/get_candidates', methods=['GET'])
 def get_candidates():
     try:
         candidates = ungcuvien.find()  # Lấy tất cả ứng cử viên từ MongoDB
         candidate_list = []
         for candidate in candidates:
-            candidate['_id'] = str(candidate['_id'])  # Chuyển ObjectId thành string
-            # Đảm bảo trả về isApproved, nếu không có thì mặc định là False
+            candidate['_id'] = str(candidate['_id'])
             candidate['isApproved'] = candidate.get('isApproved', False)
             candidate_list.append(candidate)
-        print("Candidate List:", candidate_list)  # In ra danh sách ứng cử viên để kiểm tra
+        print("Candidate List:", candidate_list)
         return jsonify(candidate_list), 200
     except Exception as e:
-        print("Error getting candidates:", str(e))  # In ra lỗi nếu có
+        print("Error getting candidates:", str(e))
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/add_candidate', methods=['POST'])
 def add_candidate():
@@ -250,54 +255,70 @@ def add_candidate():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/get_elections/<_id>", methods=["GET"])
 def get_election_detail(_id):
     election = elections_collection.find_one({"_id": ObjectId(_id)})
     if not election:
         return jsonify({"error": "Election not found"}), 404
 
+    # Convert ObjectId to string in the election document
     election_detail = {
-        "_id": str(election["_id"]),
+        "_id": str(election["_id"]),  # Convert ObjectId to string
         "tenCuocBauCu": election["tenCuocBauCu"],
         "tinh": election.get("tinh", ""),
         "quan": election.get("quan", ""),
         "phuong": election.get("phuong", ""),
         "thoiGianBatDau": format_datetime(election.get("thoiGianBatDau", "")),
         "thoiGianKetThuc": format_datetime(election.get("thoiGianKetThuc", "")),
-        "ungCuVien": election.get("ungCuVien", [])  # Trả về danh sách ứng cử viên đầy đủ
+        "ungCuVien": []
+
     }
+    for candidate in election.get("ungCuVien", []):
+        candidate["_id"] = str(candidate.get("_id", ""))
+
+        election_detail["ungCuVien"].append(candidate)
 
     return jsonify(election_detail), 200
 
-@app.route("/add_candidate_elections/<_id>", methods=["POST"])
-def add_candidate_elections(_id):
-    data = request.json  # Nhận dữ liệu ứng viên từ frontend
 
+@app.route("/add_candidate_elections/<_id>", methods=["GET", "POST"])
+def add_candidate_elections(_id):
     election = elections_collection.find_one({"_id": ObjectId(_id)})
     if not election:
         return jsonify({"error": "Election not found"}), 404
 
-    new_candidate = {
-        "name": data.get("name"),
-        "dob": data.get("dob"),
-        "gender": data.get("gender"),
-        "nationality": data.get("nationality"),
-        "ethnicity": data.get("ethnicity"),
-        "religion": data.get("religion"),
-        "hometown": data.get("hometown"),
-        "currentResidence": data.get("currentResidence"),
-        "occupation": data.get("occupation"),
-        "workplace": data.get("workplace"),
-        "isApproved": False  # Mặc định chưa được phê duyệt
-    }
+    tinh_election = election.get("tinh", "")
 
-    # Thêm ứng viên vào danh sách ungCuVien
-    elections_collection.update_one(
-        {"_id": ObjectId(_id)},
-        {"$push": {"ungCuVien": new_candidate}}
-    )
+    if request.method == "GET":
+        # Find APPROVED candidates for the location
+        approved_candidates = list(ungcuvien.find({
+            "isApproved": True,
+            "workplace": tinh_election
+        }))
 
-    return jsonify({"message": "Candidate added successfully"}), 200
+        for candidate in approved_candidates:
+            candidate["_id"] = str(candidate["_id"])  # Ensure _id is a string
+
+        return jsonify(approved_candidates)  # ONLY return available candidates
+
+    elif request.method == "POST":
+        data = request.json
+
+        candidate_ids = data.get("candidate_ids", [])
+        selected_candidates = []
+        for candidate_id in candidate_ids:
+            candidate = ungcuvien.find_one({"_id": ObjectId(candidate_id)})
+            if candidate:
+                selected_candidates.append(candidate)
+
+        # Cập nhật danh sách ứng cử viên trong cuộc bầu cử
+        elections_collection.update_one(
+            {"_id": ObjectId(_id)},
+            {"$push": {"ungCuVien": {"$each": selected_candidates}}}
+        )
+        return jsonify({"message": "Candidates added successfully"}), 200
+
 @app.route("/approve_candidate/<candidate_id>", methods=["POST"])
 def approve_candidate(candidate_id):
     try:
@@ -307,7 +328,6 @@ def approve_candidate(candidate_id):
             return jsonify({"error": "Candidate not found"}), 404
         if candidate.get("isApproved", False):
             return jsonify({"message": "Candidate already approved"}), 200
-        # Cập nhật trạng thái isApproved của ứng cử viên trong collection `ungcuvien`
         ungcuvien.update_one(
             {"_id": candidate_object_id},
             {"$set": {"isApproved": True}}
@@ -316,5 +336,7 @@ def approve_candidate(candidate_id):
     except Exception as e:
         print(f"Lỗi khi duyệt ứng cử viên (approve_candidate): {e}")
         return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=8800)
