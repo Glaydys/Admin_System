@@ -112,38 +112,39 @@
         </form>
     </div>
 
-   <div id="electionModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">×</span>
-        <h2 style="text-align: center">Chi tiết cuộc bầu cử</h2>
-        <p><strong>Tên:</strong> <span id="modal_tenCuocBauCu"></span></p>
-        <p><strong>Tỉnh:</strong> <span id="modal_tinh"></span></p>
-        <p><strong>Quận:</strong> <span id="modal_quan"></span></p>
-        <p><strong>Phường:</strong> <span id="modal_phuong"></span></p>
-        <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
-        <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
+    <div id="electionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="text-align: center">Chi tiết cuộc bầu cử</h2>
+            <p><strong>Tên:</strong> <span id="modal_tenCuocBauCu"></span></p>
+            <p><strong>Tỉnh:</strong> <span id="modal_tinh"></span></p>
+            <p><strong>Quận:</strong> <span id="modal_quan"></span></p>
+            <p><strong>Phường:</strong> <span id="modal_phuong"></span></p>
+            <p><strong>Bắt đầu:</strong> <span id="modal_thoiGianBatDau"></span></p>
+            <p><strong>Kết thúc:</strong> <span id="modal_thoiGianKetThuc"></span></p>
 
-        <h3>Danh sách ứng cử viên:</h3>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Họ và tên</th>
-                    <th>Ngày sinh</th>
-                    <th>Giới tính</th>
-                    <th>Quốc tịch</th>
-                    <th>Dân tộc</th>
-                    <th>Tôn giáo</th>
-                    <th>Quê quán</th>
-                    <th>Nơi ở hiện nay</th>
-                    <th>Nghề nghiệp, chức vụ</th>
-                    <th>Nơi công tác</th>
-                </tr>
-            </thead>
-            <tbody id="modal_ungCuVien"></tbody>
-        </table>
+            <h3>Danh sách ứng cử viên</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>Quốc tịch</th>
+                        <th>Dân tộc</th>
+                        <th>Tôn giáo</th>
+                        <th>Quê quán</th>
+                        <th>Nơi ở hiện nay</th>
+                        <th>Nghề nghiệp, chức vụ</th>
+                        <th>Nơi công tác</th>
+                    </tr>
+                </thead>
+                <tbody id="modal_ungCuVien"></tbody>
+            </table>
 
-        <div id="chooseCandidatesSection" style="display: none;">
+            <!-- Nút mở form thêm ứng cử viên -->
+               <div id="chooseCandidatesSection" style="display: none;">
     <h3>Chọn ứng cử viên:</h3>
     <div id="candidateList">
     </div>
@@ -151,6 +152,8 @@
         Thêm ứng cử viên đã chọn
     </button>
 </div>
+        </div>
+    </div>
 
    <div class="Quanlyungcuvien">
     <h2>Quản lý Ứng Cử Viên</h2>
@@ -234,6 +237,7 @@
             <button type="button" id="btnHuyUngCuVien">Hủy</button>
         </form>
     </div>
+</div>
 
 </body>
 
